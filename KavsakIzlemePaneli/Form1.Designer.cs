@@ -42,7 +42,7 @@
             // 
             this.btnVeriCek.Location = new System.Drawing.Point(72, 52);
             this.btnVeriCek.Name = "btnVeriCek";
-            this.btnVeriCek.Size = new System.Drawing.Size(217, 23);
+            this.btnVeriCek.Size = new System.Drawing.Size(217, 21);
             this.btnVeriCek.TabIndex = 0;
             this.btnVeriCek.Text = "Sahadan Canlı Sinyal Verisi Çek";
             this.btnVeriCek.UseVisualStyleBackColor = true;
@@ -79,7 +79,6 @@
             this.label1.Size = new System.Drawing.Size(73, 13);
             this.label1.TabIndex = 3;
             this.label1.Text = "Durum Filtresi:";
-            
             // 
             // cmbDurumFiltre
             // 

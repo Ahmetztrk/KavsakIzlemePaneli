@@ -25,6 +25,10 @@ namespace KavsakIzlemePaneli
 
             // Varsayılan olarak "Tüm Durumlar" seçilsin
             cmbDurumFiltre.SelectedIndex = 0;
+
+            // Timer'ı 10 saniyeye ayarlayıp başlatıyoruz
+            timer1.Interval = 10000;
+            timer1.Start();
         }
 
         private void cmbDurumFiltre_SelectedIndexChanged(object sender, EventArgs e)
@@ -166,7 +170,8 @@ namespace KavsakIzlemePaneli
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
-            // Boş kalabilir
+            // 10 saniyede bir Veri Çek butonunu tetikleyerek verileri yeniler
+            btnVeriCek.PerformClick();
         }
 
         private void dgvKavsaklar_CellContentClick(object sender, DataGridViewCellEventArgs e)
