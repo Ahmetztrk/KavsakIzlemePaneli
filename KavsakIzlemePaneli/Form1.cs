@@ -7,6 +7,10 @@ namespace KavsakIzlemePaneli
 {
     public partial class Form1 : Form
     {
+        // Tüm formda kullanacağımız ana veri tablosu ve rastgele sayı üreticisi
+        private DataTable dtKavsaklar;
+        private Random random = new Random();
+
         public Form1()
         {
             InitializeComponent();
@@ -14,169 +18,186 @@ namespace KavsakIzlemePaneli
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // ComboBox filtre seçeneklerini dolduruyoruz
+            // 1. ComboBox filtre seçeneklerini dolduruyoruz
             cmbDurumFiltre.Items.Clear();
             cmbDurumFiltre.Items.Add("Tüm Durumlar");
-            cmbDurumFiltre.Items.Add("Akıcı");
-            cmbDurumFiltre.Items.Add("Normal");
-            cmbDurumFiltre.Items.Add("Yoğun");
             cmbDurumFiltre.Items.Add("Aşırı Yoğun");
+            cmbDurumFiltre.Items.Add("Yoğun");
+            cmbDurumFiltre.Items.Add("Normal");
+            cmbDurumFiltre.Items.Add("Akıcı");
             cmbDurumFiltre.Items.Add("Veri Yok");
-
-            // Varsayılan olarak "Tüm Durumlar" seçilsin
             cmbDurumFiltre.SelectedIndex = 0;
 
-            // Timer'ı 10 saniyeye ayarlayıp başlatıyoruz
+            // 2. Tablo yapısını ilk açılışta oluşturuyoruz
+            TabloYapisiniOlustur();
+
+            // 3. Form açılır açılmaz sahadan ilk verileri çekiyoruz
+            VerileriGuncelle();
+
+            // 4. Timer'ı 10 saniyeye (10000 ms) ayarlayıp başlatıyoruz
             timer1.Interval = 10000;
             timer1.Start();
         }
 
-        private void cmbDurumFiltre_SelectedIndexChanged(object sender, EventArgs e)
+        private void TabloYapisiniOlustur()
         {
-            // Filtre seçimi değiştiğinde verileri otomatik olarak tekrar çekip süzer
-            btnVeriCek.PerformClick();
+            dtKavsaklar = new DataTable();
+            dtKavsaklar.Columns.Add("KavsakAdi", typeof(string));
+            dtKavsaklar.Columns.Add("AracSayisi", typeof(int));
+            dtKavsaklar.Columns.Add("Durum", typeof(string));
+            dtKavsaklar.Columns.Add("Oncelik", typeof(int)); // Sıralama için gizli sütun
         }
 
         private void btnVeriCek_Click(object sender, EventArgs e)
         {
-            // 1. Tablo Yapısını Oluşturma
-            DataTable dt = new DataTable();
-            dt.Columns.Add("Kavşak Adı", typeof(string));
-            dt.Columns.Add("Araç Sayısı", typeof(int));
-            dt.Columns.Add("Sinyal Durumu", typeof(string));
-
-            Random rnd = new Random();
-            string[] durumlar = { "Akıcı", "Normal", "Yoğun", "Aşırı Yoğun", "Veri Yok" };
-
-            // 2. 50 Adet İstanbul Sinyalize Kavşak Listesi
-            string[] istanbulSinyalKavsaklari = {
-                "Kadıköy Rıhtım Sinyalize Kavşağı",
-                "Beşiktaş Meydan Akaretler Sinyalize Kavşağı",
-                "Taksim Meydan Tünel Giriş Sinyalize Kavşağı",
-                "Kızıltoprak Minibüs Caddesi Sinyalize Kavşağı",
-                "Üsküdar İskele Meydan Sinyalize Kavşağı",
-                "Aksaray Meydan Valilik Önü Sinyalize Kavşağı",
-                "Topkapı Millet Caddesi Sinyalize Kavşağı",
-                "Cevizlibağ D-100 Yanyol Sinyalize Kavşağı",
-                "Bakırköy Özgürlük Meydanı Sinyalize Kavşağı",
-                "Şirinevler Meydan Sinyalize Kavşağı",
-                "Bahçelievler Yayla Meydan Sinyalize Kavşağı",
-                "Yenibosna Kuleli Sinyalize Kavşağı",
-                "Mecidiyeköy Ortaklar Caddesi Sinyalize Kavşağı",
-                "Levent Gültepe Sapağı Sinyalize Kavşağı",
-                "Maslak Dereboyu Caddesi Sinyalize Kavşağı",
-                "Ortaköy Muallim Naci Caddesi Sinyalize Kavşağı",
-                "Bebek Sahil Yolu Akıntıburnu Sinyalize Kavşağı",
-                "Etiler Çamlık Sinyalize Kavşağı",
-                "Ümraniye Çarşı Son Durak Sinyalize Kavşağı",
-                "Ataşehir Bulvarı Mozaik Sinyalize Kavşağı",
-                "Göztepe Minibüs Caddesi Sinyalize Kavşağı",
-                "Bostancı Sahil Yolu İskele Sinyalize Kavşağı",
-                "Maltepe Meydan Camii Önü Sinyalize Kavşağı",
-                "Kartal Baba Hakkı Caddesi Sinyalize Kavşağı",
-                "Pendik Doğu Mahallesi Sinyalize Kavşağı",
-                "Beykoz Sahil Yolu Ortaçeşme Sinyalize Kavşağı",
-                "Sarıyer Hacıosman Metro Çıkışı Sinyalize Kavşağı",
-                "Kâğıthane Cendere Caddesi Sinyalize Kavşağı",
-                "Alibeyköy Vardar Caddesi Sinyalize Kavşağı",
-                "Eyüpsultan Bulvarı Camii Önü Sinyalize Kavşağı",
-                "Gaziosmanpaşa Meydan Sinyalize Kavşağı",
-                "Bayrampaşa Demirkapı Caddesi Sinyalize Kavşağı",
-                "Esenler Dörtyol Meydanı Sinyalize Kavşağı",
-                "Bağcılar Meydan Sinyalize Kavşağı",
-                "Güngören Kale Merkez Önü Sinyalize Kavşağı",
-                "Zeytinburnu Bulvar Sinyalize Kavşağı",
-                "Fatih Vatan Caddesi Emniyet Önü Sinyalize Kavşağı",
-                "Eminönü Mısır Çarşısı Önü Sinyalize Kavşağı",
-                "Karaköy Kemeraltı Caddesi Sinyalize Kavşağı",
-                "Şişli Camii Önü Sinyalize Kavşağı",
-                "Sarıyer Çayırbaşı Sinyalize Kavşağı",
-                "İkitelli Organize Sanayi Bölgesi Sinyalize Kavşağı",
-                "Küçükçekmece Cennet Mahallesi Sinyalize Kavşağı",
-                "Avcılar Reşitpaşa Caddesi Sinyalize Kavşağı",
-                "Beylikdüzü Belediye Önü Sinyalize Kavşağı",
-                "Esenyurt Doğan Araslı Bulvarı Sinyalize Kavşağı",
-                "Büyükçekmece Sahil Giriş Sinyalize Kavşağı",
-                "Tuzla İçmeler Sinyalize Kavşağı",
-                "Sancaktepe Samandıra Sinyalize Kavşağı",
-                "Sultanbeyli Kent Meydanı Sinyalize Kavşağı"
-            };
-
-            // 3. Tabloyu Rastgele Verilerle Doldurma
-            for (int i = 0; i < 50; i++)
-            {
-                string kavsakAdi = istanbulSinyalKavsaklari[i];
-                int aracSayisi = rnd.Next(15, 280);
-                string durum = durumlar[rnd.Next(durumlar.Length)];
-
-                dt.Rows.Add(kavsakAdi, aracSayisi, durum);
-            }
-
-            // 4. ComboBox Süzme Mantığı
-            if (cmbDurumFiltre.SelectedItem != null)
-            {
-                string secilenDurum = cmbDurumFiltre.SelectedItem.ToString();
-
-                if (secilenDurum != "Tüm Durumlar")
-                {
-                    DataView dv = dt.DefaultView;
-                    dv.RowFilter = $"[Sinyal Durumu] = '{secilenDurum}'";
-                    dgvKavsaklar.DataSource = dv;
-                }
-                else
-                {
-                    dgvKavsaklar.DataSource = dt;
-                }
-            }
-            else
-            {
-                dgvKavsaklar.DataSource = dt;
-            }
-
-            // 5. Hücre Renklendirme Mantığı
-            foreach (DataGridViewRow row in dgvKavsaklar.Rows)
-            {
-                if (row.Cells["Sinyal Durumu"].Value != null)
-                {
-                    string durum = row.Cells["Sinyal Durumu"].Value.ToString();
-
-                    if (durum == "Aşırı Yoğun")
-                    {
-                        row.DefaultCellStyle.BackColor = Color.DarkRed;
-                        row.DefaultCellStyle.ForeColor = Color.White;
-                    }
-                    else if (durum == "Yoğun")
-                    {
-                        row.DefaultCellStyle.BackColor = Color.LightCoral;
-                        row.DefaultCellStyle.ForeColor = Color.Black;
-                    }
-                    else if (durum == "Normal")
-                    {
-                        row.DefaultCellStyle.BackColor = Color.Khaki;
-                        row.DefaultCellStyle.ForeColor = Color.Black;
-                    }
-                    else if (durum == "Akıcı")
-                    {
-                        row.DefaultCellStyle.BackColor = Color.LightGreen;
-                        row.DefaultCellStyle.ForeColor = Color.Black;
-                    }
-                    else if (durum == "Veri Yok")
-                    {
-                        row.DefaultCellStyle.BackColor = Color.LightGray;
-                        row.DefaultCellStyle.ForeColor = Color.DarkGray;
-                    }
-                }
-            }
+            // Butona basıldığında verileri yeniler
+            VerileriGuncelle();
         }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
-            // 10 saniyede bir Veri Çek butonunu tetikleyerek verileri yeniler
+            // 10 saniyede bir otomatik olarak butona tıklar ve veriyi günceller
             btnVeriCek.PerformClick();
         }
 
-        private void dgvKavsaklar_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void VerileriGuncelle()
         {
-            // Boş kalabilir
+            if (dtKavsaklar == null) TabloYapisiniOlustur();
+            dtKavsaklar.Rows.Clear();
+
+            // İstanbul Kavşak Listesi
+            string[] kavsaklar = new string[]
+            {
+                "Kadıköy Rıhtım Sinyalize Kavşağı", "Beşiktaş Meydan Kavşağı", "Taksim Meydan Kavşağı",
+                "Kızıltoprak Minibüs Yolu Kavşağı", "Üsküdar İskele Meydanı", "Aksaray Meydan Kavşağı",
+                "Topkapı Millet Caddesi", "Cevizlibağ D-100 Bağlantısı", "Bakırköy Özgürlük Meydanı",
+                "Şirinevler Meydan Kavşağı", "Bahçelievler Yayla Kavşağı", "Yenibosna Kuleli Kavşağı",
+                "Mecidiyeköy Ortaklar Caddesi", "Levent Gültepe Sapağı", "Maslak Dereboyu Caddesi",
+                "Ortaköy Muallim Naci Caddesi", "Bebek Sahil Yolu Kavşağı", "Etiler Çamlık Sinyalize",
+                "Ümraniye Çarşı Sinyalize", "Ataşehir Bulvarı Kavşağı", "Göztepe Minibüs Yolu",
+                "Bostancı Sahil Yolu Kavşağı"
+            };
+
+            foreach (var kavsak in kavsaklar)
+            {
+                string durum = "";
+                int aracSayisi = 0;
+                int oncelik = 5;
+
+                // 1 ile 5 arasında rastgele durum belirliyoruz
+                int durumRastgele = random.Next(1, 6);
+
+                switch (durumRastgele)
+                {
+                    case 1:
+                        durum = "Aşırı Yoğun";
+                        aracSayisi = random.Next(300, 500);
+                        oncelik = 1; // En yüksek öncelik (En üstte görünecek)
+                        break;
+                    case 2:
+                        durum = "Yoğun";
+                        aracSayisi = random.Next(200, 300);
+                        oncelik = 2;
+                        break;
+                    case 3:
+                        durum = "Normal";
+                        aracSayisi = random.Next(100, 200);
+                        oncelik = 3;
+                        break;
+                    case 4:
+                        durum = "Akıcı";
+                        aracSayisi = random.Next(1, 100);
+                        oncelik = 4;
+                        break;
+                    case 5:
+                        durum = "Veri Yok";
+                        aracSayisi = 0; // MANTIK HATASI DÜZELTİLDİ: Sinyal yoksa araç sayısı 0 olmalı!
+                        oncelik = 5; // En düşük öncelik (En altta görünecek)
+                        break;
+                }
+
+                dtKavsaklar.Rows.Add(kavsak, aracSayisi, durum, oncelik);
+            }
+
+            // Filtreleme ve Sıralama İşlemi
+            TabloyuFiltreleVeSirala();
+        }
+
+        private void cmbDurumFiltre_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Kullanıcı ComboBox'tan seçim değiştirdiğinde tabloyu yeniden filtreler
+            TabloyuFiltreleVeSirala();
+        }
+
+        private void TabloyuFiltreleVeSirala()
+        {
+            if (dtKavsaklar == null) return;
+
+            DataView dv = dtKavsaklar.DefaultView;
+            string secilenFiltre = cmbDurumFiltre.SelectedItem?.ToString();
+
+            // 1. Filtreleme Mantığı
+            if (!string.IsNullOrEmpty(secilenFiltre) && secilenFiltre != "Tüm Durumlar")
+            {
+                dv.RowFilter = $"Durum = '{secilenFiltre}'";
+            }
+            else
+            {
+                dv.RowFilter = ""; // Hepsini göster
+            }
+
+            // 2. Sıralama Mantığı: Oncelik sütununa göre küçükten büyüğe (1 -> 5)
+            dv.Sort = "Oncelik ASC";
+
+            dgvKavsaklar.DataSource = dv.ToTable();
+
+            // Oncelik sütununu ekranda gizliyoruz (Kullanıcının görmesine gerek yok)
+            if (dgvKavsaklar.Columns["Oncelik"] != null)
+            {
+                dgvKavsaklar.Columns["Oncelik"].Visible = false;
+            }
+
+            // Sütun Başlıklarını Düzenleme
+            if (dgvKavsaklar.Columns["KavsakAdi"] != null) dgvKavsaklar.Columns["KavsakAdi"].HeaderText = "Kavşak Adı";
+            if (dgvKavsaklar.Columns["AracSayisi"] != null) dgvKavsaklar.Columns["AracSayisi"].HeaderText = "Araç Sayısı";
+            if (dgvKavsaklar.Columns["Durum"] != null) dgvKavsaklar.Columns["Durum"].HeaderText = "Sinyal Durumu";
+
+            // Renklendirme Mantığını Çağırıyoruz
+            SatirlariRenklendir();
+        }
+
+        private void SatirlariRenklendir()
+        {
+            foreach (DataGridViewRow row in dgvKavsaklar.Rows)
+            {
+                if (row.Cells["Durum"].Value == null) continue;
+
+                string durum = row.Cells["Durum"].Value.ToString();
+
+                switch (durum)
+                {
+                    case "Aşırı Yoğun":
+                        row.DefaultCellStyle.BackColor = Color.DarkRed;
+                        row.DefaultCellStyle.ForeColor = Color.White;
+                        break;
+                    case "Yoğun":
+                        row.DefaultCellStyle.BackColor = Color.LightCoral;
+                        row.DefaultCellStyle.ForeColor = Color.Black;
+                        break;
+                    case "Normal":
+                        row.DefaultCellStyle.BackColor = Color.Khaki;
+                        row.DefaultCellStyle.ForeColor = Color.Black;
+                        break;
+                    case "Akıcı":
+                        row.DefaultCellStyle.BackColor = Color.LightGreen;
+                        row.DefaultCellStyle.ForeColor = Color.Black;
+                        break;
+                    case "Veri Yok":
+                        row.DefaultCellStyle.BackColor = Color.LightGray;
+                        row.DefaultCellStyle.ForeColor = Color.DarkGray;
+                        break;
+                }
+            }
         }
     }
 }
