@@ -35,14 +35,15 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.cmbDurumFiltre = new System.Windows.Forms.ComboBox();
+            this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             ((System.ComponentModel.ISupportInitialize)(this.dgvKavsaklar)).BeginInit();
             this.SuspendLayout();
             // 
             // btnVeriCek
             // 
-            this.btnVeriCek.Location = new System.Drawing.Point(72, 52);
+            this.btnVeriCek.Location = new System.Drawing.Point(12, 12);
             this.btnVeriCek.Name = "btnVeriCek";
-            this.btnVeriCek.Size = new System.Drawing.Size(217, 21);
+            this.btnVeriCek.Size = new System.Drawing.Size(271, 21);
             this.btnVeriCek.TabIndex = 0;
             this.btnVeriCek.Text = "Sahadan Canlı Sinyal Verisi Çek";
             this.btnVeriCek.UseVisualStyleBackColor = true;
@@ -51,15 +52,15 @@
             // dgvKavsaklar
             // 
             this.dgvKavsaklar.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvKavsaklar.Location = new System.Drawing.Point(535, 52);
+            this.dgvKavsaklar.Location = new System.Drawing.Point(12, 57);
             this.dgvKavsaklar.Name = "dgvKavsaklar";
-            this.dgvKavsaklar.Size = new System.Drawing.Size(710, 506);
+            this.dgvKavsaklar.Size = new System.Drawing.Size(342, 544);
             this.dgvKavsaklar.TabIndex = 1;
             // 
             // lblDurum
             // 
             this.lblDurum.AutoSize = true;
-            this.lblDurum.Location = new System.Drawing.Point(69, 96);
+            this.lblDurum.Location = new System.Drawing.Point(12, 36);
             this.lblDurum.Name = "lblDurum";
             this.lblDurum.Size = new System.Drawing.Size(220, 13);
             this.lblDurum.TabIndex = 2;
@@ -74,7 +75,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(294, 57);
+            this.label1.Location = new System.Drawing.Point(414, 16);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(73, 13);
             this.label1.TabIndex = 3;
@@ -83,17 +84,26 @@
             // cmbDurumFiltre
             // 
             this.cmbDurumFiltre.FormattingEnabled = true;
-            this.cmbDurumFiltre.Location = new System.Drawing.Point(400, 52);
+            this.cmbDurumFiltre.Location = new System.Drawing.Point(544, 16);
             this.cmbDurumFiltre.Name = "cmbDurumFiltre";
             this.cmbDurumFiltre.Size = new System.Drawing.Size(129, 21);
             this.cmbDurumFiltre.TabIndex = 4;
             this.cmbDurumFiltre.SelectedIndexChanged += new System.EventHandler(this.cmbDurumFiltre_SelectedIndexChanged);
+            // 
+            // webBrowser1
+            // 
+            this.webBrowser1.Location = new System.Drawing.Point(368, 57);
+            this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
+            this.webBrowser1.Name = "webBrowser1";
+            this.webBrowser1.Size = new System.Drawing.Size(831, 544);
+            this.webBrowser1.TabIndex = 5;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1257, 613);
+            this.Controls.Add(this.webBrowser1);
             this.Controls.Add(this.cmbDurumFiltre);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lblDurum);
@@ -116,6 +126,7 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cmbDurumFiltre;
+        private System.Windows.Forms.WebBrowser webBrowser1;
     }
 }
 

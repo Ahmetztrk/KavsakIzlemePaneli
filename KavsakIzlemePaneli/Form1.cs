@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Data;
 using System.Drawing;
+using System.Text;
 using System.Windows.Forms;
 
 namespace KavsakIzlemePaneli
 {
     public partial class Form1 : Form
     {
-        // Tüm formda kullanacağımız ana veri tablosu ve rastgele sayı üreticisi
         private DataTable dtKavsaklar;
         private Random random = new Random();
 
@@ -18,7 +18,7 @@ namespace KavsakIzlemePaneli
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // 1. ComboBox filtre seçeneklerini dolduruyoruz
+            // ComboBox doldurma
             cmbDurumFiltre.Items.Clear();
             cmbDurumFiltre.Items.Add("Tüm Durumlar");
             cmbDurumFiltre.Items.Add("Aşırı Yoğun");
@@ -28,13 +28,10 @@ namespace KavsakIzlemePaneli
             cmbDurumFiltre.Items.Add("Veri Yok");
             cmbDurumFiltre.SelectedIndex = 0;
 
-            // 2. Tablo yapısını ilk açılışta oluşturuyoruz
             TabloYapisiniOlustur();
-
-            // 3. Form açılır açılmaz sahadan ilk verileri çekiyoruz
             VerileriGuncelle();
 
-            // 4. Timer'ı 10 saniyeye (10000 ms) ayarlayıp başlatıyoruz
+            // Timer ayarı (10 saniye)
             timer1.Interval = 10000;
             timer1.Start();
         }
@@ -45,18 +42,18 @@ namespace KavsakIzlemePaneli
             dtKavsaklar.Columns.Add("KavsakAdi", typeof(string));
             dtKavsaklar.Columns.Add("AracSayisi", typeof(int));
             dtKavsaklar.Columns.Add("Durum", typeof(string));
-            dtKavsaklar.Columns.Add("Oncelik", typeof(int)); // Sıralama için gizli sütun
+            dtKavsaklar.Columns.Add("Oncelik", typeof(int));
+            dtKavsaklar.Columns.Add("Enlem", typeof(double));
+            dtKavsaklar.Columns.Add("Boylam", typeof(double));
         }
 
         private void btnVeriCek_Click(object sender, EventArgs e)
         {
-            // Butona basıldığında verileri yeniler
             VerileriGuncelle();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            // 10 saniyede bir otomatik olarak butona tıklar ve veriyi günceller
             btnVeriCek.PerformClick();
         }
 
@@ -65,26 +62,27 @@ namespace KavsakIzlemePaneli
             if (dtKavsaklar == null) TabloYapisiniOlustur();
             dtKavsaklar.Rows.Clear();
 
-            // İstanbul Kavşak Listesi
-            string[] kavsaklar = new string[]
+            // İstanbul Kavşakları ve Yaklaşık Koordinatları
+            var kavsakListesi = new[]
             {
-                "Kadıköy Rıhtım Sinyalize Kavşağı", "Beşiktaş Meydan Kavşağı", "Taksim Meydan Kavşağı",
-                "Kızıltoprak Minibüs Yolu Kavşağı", "Üsküdar İskele Meydanı", "Aksaray Meydan Kavşağı",
-                "Topkapı Millet Caddesi", "Cevizlibağ D-100 Bağlantısı", "Bakırköy Özgürlük Meydanı",
-                "Şirinevler Meydan Kavşağı", "Bahçelievler Yayla Kavşağı", "Yenibosna Kuleli Kavşağı",
-                "Mecidiyeköy Ortaklar Caddesi", "Levent Gültepe Sapağı", "Maslak Dereboyu Caddesi",
-                "Ortaköy Muallim Naci Caddesi", "Bebek Sahil Yolu Kavşağı", "Etiler Çamlık Sinyalize",
-                "Ümraniye Çarşı Sinyalize", "Ataşehir Bulvarı Kavşağı", "Göztepe Minibüs Yolu",
-                "Bostancı Sahil Yolu Kavşağı"
+                new { Ad = "Kadıköy Rıhtım Sinyalize Kavşağı", Lat = 40.9904, Lng = 29.0254 },
+                new { Ad = "Beşiktaş Meydan Kavşağı", Lat = 41.0422, Lng = 29.0067 },
+                new { Ad = "Taksim Meydan Kavşağı", Lat = 41.0370, Lng = 28.9850 },
+                new { Ad = "Mecidiyeköy Ortaklar Caddesi", Lat = 41.0661, Lng = 28.9942 },
+                new { Ad = "Maslak Dereboyu Caddesi", Lat = 41.1115, Lng = 29.0223 },
+                new { Ad = "Üsküdar İskele Meydanı", Lat = 41.0270, Lng = 29.0153 },
+                new { Ad = "Cevizlibağ D-100 Bağlantısı", Lat = 41.0156, Lng = 28.9142 },
+                new { Ad = "Bakırköy Özgürlük Meydanı", Lat = 40.9782, Lng = 28.8741 },
+                new { Ad = "Şirinevler Meydan Kavşağı", Lat = 40.9925, Lng = 28.8475 },
+                new { Ad = "Göztepe Minibüs Yolu", Lat = 40.9822, Lng = 29.0571 }
             };
 
-            foreach (var kavsak in kavsaklar)
+            foreach (var k in kavsakListesi)
             {
                 string durum = "";
                 int aracSayisi = 0;
                 int oncelik = 5;
 
-                // 1 ile 5 arasında rastgele durum belirliyoruz
                 int durumRastgele = random.Next(1, 6);
 
                 switch (durumRastgele)
@@ -92,7 +90,7 @@ namespace KavsakIzlemePaneli
                     case 1:
                         durum = "Aşırı Yoğun";
                         aracSayisi = random.Next(300, 500);
-                        oncelik = 1; // En yüksek öncelik (En üstte görünecek)
+                        oncelik = 1;
                         break;
                     case 2:
                         durum = "Yoğun";
@@ -111,21 +109,19 @@ namespace KavsakIzlemePaneli
                         break;
                     case 5:
                         durum = "Veri Yok";
-                        aracSayisi = 0; // MANTIK HATASI DÜZELTİLDİ: Sinyal yoksa araç sayısı 0 olmalı!
-                        oncelik = 5; // En düşük öncelik (En altta görünecek)
+                        aracSayisi = 0;
+                        oncelik = 5;
                         break;
                 }
 
-                dtKavsaklar.Rows.Add(kavsak, aracSayisi, durum, oncelik);
+                dtKavsaklar.Rows.Add(k.Ad, aracSayisi, durum, oncelik, k.Lat, k.Lng);
             }
 
-            // Filtreleme ve Sıralama İşlemi
             TabloyuFiltreleVeSirala();
         }
 
         private void cmbDurumFiltre_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Kullanıcı ComboBox'tan seçim değiştirdiğinde tabloyu yeniden filtreler
             TabloyuFiltreleVeSirala();
         }
 
@@ -136,34 +132,31 @@ namespace KavsakIzlemePaneli
             DataView dv = dtKavsaklar.DefaultView;
             string secilenFiltre = cmbDurumFiltre.SelectedItem?.ToString();
 
-            // 1. Filtreleme Mantığı
             if (!string.IsNullOrEmpty(secilenFiltre) && secilenFiltre != "Tüm Durumlar")
             {
                 dv.RowFilter = $"Durum = '{secilenFiltre}'";
             }
             else
             {
-                dv.RowFilter = ""; // Hepsini göster
+                dv.RowFilter = "";
             }
 
-            // 2. Sıralama Mantığı: Oncelik sütununa göre küçükten büyüğe (1 -> 5)
             dv.Sort = "Oncelik ASC";
-
             dgvKavsaklar.DataSource = dv.ToTable();
 
-            // Oncelik sütununu ekranda gizliyoruz (Kullanıcının görmesine gerek yok)
-            if (dgvKavsaklar.Columns["Oncelik"] != null)
+            string[] gizliSutunlar = { "Oncelik", "Enlem", "Boylam" };
+            foreach (var col in gizliSutunlar)
             {
-                dgvKavsaklar.Columns["Oncelik"].Visible = false;
+                if (dgvKavsaklar.Columns[col] != null)
+                    dgvKavsaklar.Columns[col].Visible = false;
             }
 
-            // Sütun Başlıklarını Düzenleme
             if (dgvKavsaklar.Columns["KavsakAdi"] != null) dgvKavsaklar.Columns["KavsakAdi"].HeaderText = "Kavşak Adı";
             if (dgvKavsaklar.Columns["AracSayisi"] != null) dgvKavsaklar.Columns["AracSayisi"].HeaderText = "Araç Sayısı";
             if (dgvKavsaklar.Columns["Durum"] != null) dgvKavsaklar.Columns["Durum"].HeaderText = "Sinyal Durumu";
 
-            // Renklendirme Mantığını Çağırıyoruz
             SatirlariRenklendir();
+            HaritayiGuncelle();
         }
 
         private void SatirlariRenklendir()
@@ -198,6 +191,60 @@ namespace KavsakIzlemePaneli
                         break;
                 }
             }
+        }
+
+        private void HaritayiGuncelle()
+        {
+            if (webBrowser1 == null || dgvKavsaklar.DataSource == null) return;
+
+            StringBuilder html = new StringBuilder();
+            html.AppendLine("<!DOCTYPE html>");
+            html.AppendLine("<html>");
+            html.AppendLine("<head>");
+            html.AppendLine("   <meta charset='utf-8' />");
+            html.AppendLine("   <meta http-equiv='X-UA-Compatible' content='IE=edge' />");
+            html.AppendLine("   <link rel='stylesheet' href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css' />");
+            html.AppendLine("   <script src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'></script>");
+            html.AppendLine("   <style>html, body, #map { width: 100%; height: 100%; margin: 0; padding: 0; }</style>");
+            html.AppendLine("</head>");
+            html.AppendLine("<body>");
+            html.AppendLine("   <div id='map'></div>");
+            html.AppendLine("   <script>");
+            html.AppendLine("       var map = L.map('map').setView([41.0082, 28.9784], 11);");
+            html.AppendLine("       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {");
+            html.AppendLine("           maxZoom: 19,");
+            html.AppendLine("           attribution: 'OpenStreetMap'");
+            html.AppendLine("       }).addTo(map);");
+
+            DataTable dtFiltreli = (DataTable)dgvKavsaklar.DataSource;
+
+            foreach (DataRow row in dtFiltreli.Rows)
+            {
+                string ad = row["KavsakAdi"].ToString().Replace("'", "\\'");
+                string durum = row["Durum"].ToString();
+                int arac = Convert.ToInt32(row["AracSayisi"]);
+                double lat = Convert.ToDouble(row["Enlem"]);
+                double lng = Convert.ToDouble(row["Boylam"]);
+
+                string renk = "gray";
+                if (durum == "Aşırı Yoğun") renk = "darkred";
+                else if (durum == "Yoğun") renk = "red";
+                else if (durum == "Normal") renk = "orange";
+                else if (durum == "Akıcı") renk = "green";
+
+                html.AppendLine($"   L.circleMarker([{lat.ToString(System.Globalization.CultureInfo.InvariantCulture)}, {lng.ToString(System.Globalization.CultureInfo.InvariantCulture)}], {{");
+                html.AppendLine($"       color: '{renk}',");
+                html.AppendLine($"       fillColor: '{renk}',");
+                html.AppendLine($"       fillOpacity: 0.8,");
+                html.AppendLine($"       radius: 10");
+                html.AppendLine($"   }}).addTo(map).bindPopup('<b>{ad}</b><br>Durum: {durum}<br>Araç Sayısı: {arac}');");
+            }
+
+            html.AppendLine("   </script>");
+            html.AppendLine("</body>");
+            html.AppendLine("</html>");
+
+            webBrowser1.DocumentText = html.ToString();
         }
     }
 }
