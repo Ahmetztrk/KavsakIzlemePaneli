@@ -54,7 +54,7 @@
             this.dgvKavsaklar.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvKavsaklar.Location = new System.Drawing.Point(12, 57);
             this.dgvKavsaklar.Name = "dgvKavsaklar";
-            this.dgvKavsaklar.Size = new System.Drawing.Size(342, 544);
+            this.dgvKavsaklar.Size = new System.Drawing.Size(571, 544);
             this.dgvKavsaklar.TabIndex = 1;
             // 
             // lblDurum
@@ -75,7 +75,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(414, 16);
+            this.label1.Location = new System.Drawing.Point(694, 16);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(73, 13);
             this.label1.TabIndex = 3;
@@ -84,7 +84,7 @@
             // cmbDurumFiltre
             // 
             this.cmbDurumFiltre.FormattingEnabled = true;
-            this.cmbDurumFiltre.Location = new System.Drawing.Point(544, 16);
+            this.cmbDurumFiltre.Location = new System.Drawing.Point(807, 8);
             this.cmbDurumFiltre.Name = "cmbDurumFiltre";
             this.cmbDurumFiltre.Size = new System.Drawing.Size(129, 21);
             this.cmbDurumFiltre.TabIndex = 4;
@@ -92,17 +92,17 @@
             // 
             // webBrowser1
             // 
-            this.webBrowser1.Location = new System.Drawing.Point(368, 57);
+            this.webBrowser1.Location = new System.Drawing.Point(589, 57);
             this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser1.Name = "webBrowser1";
-            this.webBrowser1.Size = new System.Drawing.Size(831, 544);
+            this.webBrowser1.Size = new System.Drawing.Size(706, 544);
             this.webBrowser1.TabIndex = 5;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1257, 613);
+            this.ClientSize = new System.Drawing.Size(1323, 649);
             this.Controls.Add(this.webBrowser1);
             this.Controls.Add(this.cmbDurumFiltre);
             this.Controls.Add(this.label1);
